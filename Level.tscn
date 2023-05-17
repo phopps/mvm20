@@ -1,0 +1,47 @@
+[gd_scene load_steps=5 format=3 uid="uid://ep75c5u06inp"]
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_o5gnu"]
+bounce = 0.2
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_rvgcw"]
+size = Vector2(720, 20)
+
+[sub_resource type="Gradient" id="Gradient_gbq0h"]
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_5mkba"]
+gradient = SubResource("Gradient_gbq0h")
+
+[node name="Level" type="Node2D"]
+
+[node name="Floor" type="StaticBody2D" parent="."]
+position = Vector2(360, 470)
+physics_material_override = SubResource("PhysicsMaterial_o5gnu")
+
+[node name="Collision" type="CollisionShape2D" parent="Floor"]
+shape = SubResource("RectangleShape2D_rvgcw")
+
+[node name="Color" type="ColorRect" parent="Floor"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -360.0
+offset_top = -10.0
+offset_right = 360.0
+offset_bottom = 10.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.121569, 0.121569, 1, 0.784314)
+
+[node name="Slope" type="StaticBody2D" parent="."]
+
+[node name="Collision" type="CollisionPolygon2D" parent="Slope"]
+position = Vector2(-85, -15)
+polygon = PackedVector2Array(104, 118, 206, 313, 414, 391, 670, 431, 788, 389, 794, 465, 93, 462)
+
+[node name="Color" type="Polygon2D" parent="Slope"]
+position = Vector2(-85, -14)
+color = Color(0, 0, 0, 1)
+texture = SubResource("GradientTexture1D_5mkba")
+polygon = PackedVector2Array(104, 118, 206, 313, 414, 391, 670, 431, 788, 389, 794, 465, 93, 462)
