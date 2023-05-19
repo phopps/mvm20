@@ -20,4 +20,11 @@ position = Vector2(360, 238)
 metadata/_edit_lock_ = true
 
 [node name="Input" parent="." instance=ExtResource("3_hnw56")]
+visible = false
 metadata/_edit_lock_ = true
+
+[node name="LaunchLine" type="Line2D" parent="."]
+visible = false
+points = PackedVector2Array(210, 228, 287, 142)
+width = 5.0
+default_color = Color(1, 0, 1, 1)
