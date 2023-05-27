@@ -11,6 +11,21 @@ can_sleep = false
 [node name="Sprite" type="Sprite2D" parent="."]
 scale = Vector2(0.885714, 0.885714)
 texture = ExtResource("1_i4oap")
+metadata/_edit_lock_ = true
 
 [node name="Shape" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_11kp4")
+metadata/_edit_lock_ = true
+
+[node name="Camera2D" type="Camera2D" parent="."]
+zoom = Vector2(0.8, 0.8)
+limit_left = 0
+limit_top = 0
+limit_right = 7200
+limit_bottom = 4800
+limit_smoothed = true
+drag_horizontal_enabled = true
+drag_vertical_enabled = true
+editor_draw_limits = true
+editor_draw_drag_margin = true
+metadata/_edit_lock_ = true

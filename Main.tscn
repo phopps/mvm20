@@ -16,11 +16,7 @@ script = ExtResource("1_mp1kx")
 metadata/_edit_lock_ = true
 
 [node name="Player" parent="." instance=ExtResource("2_n3dnt")]
-position = Vector2(360, 238)
-metadata/_edit_lock_ = true
-
-[node name="Camera" type="Camera2D" parent="."]
-position = Vector2(360, 238)
+position = Vector2(733, 269)
 metadata/_edit_lock_ = true
 
 [node name="Input" parent="." instance=ExtResource("3_hnw56")]
@@ -32,3 +28,4 @@ visible = false
 points = PackedVector2Array(210, 228, 287, 142)
 width_curve = SubResource("Curve_si3e2")
 default_color = Color(1, 0, 1, 1)
+metadata/_edit_lock_ = true
