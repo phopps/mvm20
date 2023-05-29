@@ -2,11 +2,14 @@ using Godot;
 
 public partial class Main : Node
 {
-    private Vector2 start;
-    private Vector2 end;
+    private Line2D launchLine;
+    private Vector2 lineStart;
+    private Vector2 lineEnd;
     private Vector2 impulse;
     private RigidBody2D player;
-    private Line2D launchLine;
+    private Vector2 playerStart;
+    private Vector2 playerEnd;
+
     private int startPointIndex = 0;
     private int endPointIndex = 1;
     private bool isPreparing = false;
@@ -23,11 +26,28 @@ public partial class Main : Node
         {
             if (eventMouseButton.Pressed && eventMouseButton.ButtonIndex == MouseButton.Left)
             {
-                startLaunchMode(eventMouseButton.Position);
+                // StartLaunchMode(eventMouseButton.Position);
+                isPreparing = true;
+                launchLine.Visible = true;
+                // lineStart = startPosition;
+                lineStart = eventMouseButton.Position;
+                playerStart = player.Position;
+                launchLine.SetPointPosition(startPointIndex, playerStart);
+                GD.Print("\nLine start = ", lineStart);
             }
             else if (eventMouseButton.ButtonIndex == MouseButton.Left)
             {
-                endLaunchMode(eventMouseButton.Position);
+                // EndLaunchMode(eventMouseButton.Position);
+                // lineEnd = endPosition;
+                lineEnd = eventMouseButton.Position;
+                impulse = lineStart - lineEnd;
+                playerEnd = playerStart + impulse;
+                GD.Print("Line end = ", lineEnd);
+                GD.Print("Impulse = ", impulse);
+                GD.Print("Player end = ", playerEnd);
+                player.ApplyImpulse(impulse);
+                isPreparing = false;
+                launchLine.Visible = false;
             }
         }
         else if (@event is InputEventMouseMotion eventMouseMotion && isPreparing)
@@ -36,26 +56,26 @@ public partial class Main : Node
         }
     }
 
-    private void startLaunchMode(Vector2 startPosition)
-    {
-        isPreparing = true;
-        launchLine.Visible = true;
-        start = startPosition;
-        launchLine.SetPointPosition(startPointIndex, start);
-        GD.Print("\nStart position = ", startPosition);
-    }
+    // private void StartLaunchMode(Vector2 startPosition)
+    // {
+    //     isPreparing = true;
+    //     launchLine.Visible = true;
+    //     start = startPosition;
+    //     launchLine.SetPointPosition(startPointIndex, start);
+    //     GD.Print("\nStart position = ", startPosition);
+    // }
 
-    private void endLaunchMode(Vector2 endPosition)
-    {
-        end = endPosition;
-        GD.Print("End position = ", endPosition);
-        impulse = start - end;
-        GD.Print("Launch impulse = ", impulse);
-        player.ApplyImpulse(impulse);
-        isPreparing = false;
-        launchLine.Visible = false;
-        // could animate line to move endpoint toward start point over time duration
-    }
+    // private void EndLaunchMode(Vector2 endPosition)
+    // {
+    //     end = endPosition;
+    //     GD.Print("End position = ", endPosition);
+    //     impulse = start - end;
+    //     GD.Print("Launch impulse = ", impulse);
+    //     player.ApplyImpulse(impulse);
+    //     isPreparing = false;
+    //     launchLine.Visible = false;
+    //     // could animate line to move endpoint toward start point over time duration
+    // }
 }
 
 /*

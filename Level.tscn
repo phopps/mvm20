@@ -17,6 +17,12 @@ normal = Vector2(-1, 0)
 
 [node name="Level" type="Node2D"]
 
+[node name="Background" type="Sprite2D" parent="."]
+show_behind_parent = true
+texture = ExtResource("1_6d7qd")
+centered = false
+metadata/_edit_lock_ = true
+
 [node name="Slope" type="StaticBody2D" parent="."]
 position = Vector2(160, 2256)
 scale = Vector2(5, 5)
@@ -51,9 +57,3 @@ metadata/_edit_lock_ = true
 [node name="Collision" type="CollisionShape2D" parent="BottomBoundary"]
 position = Vector2(0, 4800)
 shape = SubResource("WorldBoundaryShape2D_g6583")
-
-[node name="Background" type="Sprite2D" parent="."]
-show_behind_parent = true
-texture = ExtResource("1_6d7qd")
-centered = false
-metadata/_edit_lock_ = true
