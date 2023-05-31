@@ -57,3 +57,18 @@ metadata/_edit_lock_ = true
 [node name="Collision" type="CollisionShape2D" parent="BottomBoundary"]
 position = Vector2(0, 4800)
 shape = SubResource("WorldBoundaryShape2D_g6583")
+
+[node name="Slope2" type="StaticBody2D" parent="."]
+position = Vector2(-32, 200)
+scale = Vector2(5, 5)
+metadata/_edit_group_ = true
+
+[node name="Collision" type="CollisionPolygon2D" parent="Slope2"]
+position = Vector2(-85, -15)
+polygon = PackedVector2Array(104, 118, 206, 313, 414, 391, 670, 431, 788, 389, 794, 465, 233.405, 462.601, 93, 462)
+
+[node name="Color" type="Polygon2D" parent="Slope2"]
+position = Vector2(-85, -14)
+color = Color(0, 0, 0, 0.615686)
+texture = SubResource("GradientTexture1D_5mkba")
+polygon = PackedVector2Array(104, 118, 206, 313, 414, 391, 670, 431, 788, 389, 794, 465, 93, 462)
