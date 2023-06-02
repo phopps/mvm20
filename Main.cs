@@ -1,67 +1,132 @@
+using System.Diagnostics;
 using Godot;
 
 public partial class Main : Node
 {
-    private Vector2 start;
-    private Vector2 end;
-    private Vector2 impulse;
     private RigidBody2D player;
-    private Line2D launchLine;
-    private int startPointIndex = 0;
-    private int endPointIndex = 1;
-    private bool isPreparing = false;
+    private Line2D launchLine; // lineStart - lineEnd
+    private Vector2 lineStart; // player.Position
+    private Vector2 lineEnd; // player.Position - inputVector
+    private Vector2 inputStart;
+    private Vector2 inputEnd;
+    private Vector2 inputVector; // inputStart - inputEnd
+    private Vector2 impulse; // inputVector * multiplier
+    private Timer launchTimer; // 1 second
+    private string state = "none"; // none, idle, prep, launch
+    [Export] public float multiplier; // 9.0f
 
     public override void _Ready()
     {
         player = GetNode<RigidBody2D>("Player");
         launchLine = GetNode<Line2D>("LaunchLine");
+        launchTimer = GetNode<Timer>("LaunchTimer");
+        state = "idle";
+        GD.Print("[none -> idle] Ready.");
     }
 
-    public override void _Input(InputEvent @event)
+    public override void _UnhandledInput(InputEvent @event)
     {
-        if (@event is InputEventMouseButton eventMouseButton)
+        if (state == "idle")
         {
-            if (eventMouseButton.Pressed && eventMouseButton.ButtonIndex == MouseButton.Left)
+            if (@event.IsActionPressed("Launch"))
             {
-                startLaunchMode(eventMouseButton.Position);
-            }
-            else if (eventMouseButton.ButtonIndex == MouseButton.Left)
-            {
-                endLaunchMode(eventMouseButton.Position);
+                // All devices (mouse left click, controller bottom button, touchscreen tap)
+                GD.Print("[idle -> prep] Launch button pressed.");
+                state = "prep";
+
+                inputStart = GetViewport().GetMousePosition();
+                inputEnd = inputStart;
+                // inputVector = inputStart - inputEnd;
+                // GD.Print("[prep] Input vector = ", inputVector.ToString());
+
+                lineStart = player.Position;
+                lineEnd = player.Position;
+                launchLine.SetPointPosition(0, lineStart);
+                launchLine.SetPointPosition(1, lineEnd);
+                launchLine.Visible = true;
             }
         }
-        else if (@event is InputEventMouseMotion eventMouseMotion && isPreparing)
+        else if (state == "prep")
         {
-            launchLine.SetPointPosition(endPointIndex, eventMouseMotion.Position);
+            if (@event.IsActionReleased("Launch"))
+            {
+                GD.Print("[prep -> launch] Launch button released. Launch timer started.");
+                state = "launch";
+                launchTimer.Start();
+
+                inputEnd = GetViewport().GetMousePosition();
+                inputVector = inputStart - inputEnd;
+                GD.Print("[launch] Input vector = ", inputVector.ToString());
+
+                if (multiplier == 0)
+                {
+                    GD.Print("[launch] ERROR! Multiplier can not be set to zero.");
+                }
+
+                impulse = inputVector * multiplier;
+                GD.Print("[launch] Impulse vector = ", impulse.ToString());
+
+                launchLine.Visible = false;
+
+                player.ApplyCentralImpulse(impulse);
+            }
+            else if (@event is InputEventMouseMotion)
+            {
+                inputEnd = GetViewport().GetMousePosition();
+                inputVector = inputStart - inputEnd;
+                GD.Print("[launch] Input vector = ", inputVector.ToString());
+
+                if (multiplier == 0)
+                {
+                    GD.Print("[launch] ERROR! Multiplier can not be set to zero.");
+                }
+
+                impulse = inputVector * multiplier;
+                GD.Print("[launch] Impulse vector = ", impulse.ToString());
+
+                // lineStart = player.Position;
+                // lineEnd = lineStart - inputVector;
+                // launchLine.SetPointPosition(0, lineStart);
+                // launchLine.SetPointPosition(1, lineEnd);
+                // GD.Print("[prep] Mouse moved.");
+            }
+            else if (@event is InputEventJoypadMotion)
+            {
+                // GD.Print("[prep] Joystick moved.");
+            }
+            else if (@event is InputEventScreenDrag)
+            {
+                // GD.Print("[prep] Touchscreen dragged.");
+            }
+        }
+        else if (state == "launch")
+        {
+            // GD.Print("[launch] ", @event.GetClass(), " detected.");
+        }
+        else
+        {
+            GD.Print("[none] Error: no player state detected.");
         }
     }
 
-    private void startLaunchMode(Vector2 startPosition)
+    public override void _Process(double delta)
     {
-        isPreparing = true;
-        launchLine.Visible = true;
-        start = startPosition;
-        launchLine.SetPointPosition(startPointIndex, start);
-        GD.Print("\nStart position = ", startPosition);
+        if (launchLine.Visible)
+        {
+            lineStart = player.Position;
+            lineEnd = lineStart - inputVector;
+            launchLine.SetPointPosition(0, lineStart);
+            launchLine.SetPointPosition(1, lineEnd);
+        }
     }
 
-    private void endLaunchMode(Vector2 endPosition)
+    private void _OnLaunchTimerTimeout()
     {
-        end = endPosition;
-        GD.Print("End position = ", endPosition);
-        impulse = start - end;
-        GD.Print("Launch impulse = ", impulse);
-        player.ApplyImpulse(impulse);
-        isPreparing = false;
-        launchLine.Visible = false;
-        // could animate line to move endpoint toward start point over time duration
+        GD.Print("[launch -> idle] Launch timer stopped.");
+        state = "idle";
     }
 }
 
-/*
-prep to launch
-  make line visible
-  set start point to start position
-  end point set to current mouse position
-  any mouse movement
-*/
+// Increase lineStart from center of player to radius of player
+// Emit signal whenever state is changed
+// Animate line to move endpoint toward start point over time duration

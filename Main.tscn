@@ -4,28 +4,27 @@
 [ext_resource type="Script" path="res://Main.cs" id="1_mp1kx"]
 [ext_resource type="PackedScene" uid="uid://taryqdfmfeok" path="res://Player.tscn" id="2_n3dnt"]
 [ext_resource type="PackedScene" uid="uid://ivvyxgqq7x5l" path="res://Input.tscn" id="3_hnw56"]
-
-[sub_resource type="Curve" id="Curve_si3e2"]
-_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
-point_count = 2
+[ext_resource type="PackedScene" uid="uid://c666o3u8ccvi" path="res://LaunchLine.tscn" id="5_v4bu6"]
 
 [node name="Main" type="Node"]
 script = ExtResource("1_mp1kx")
+multiplier = 9.0
 
 [node name="Level" parent="." instance=ExtResource("1_le0le")]
 metadata/_edit_lock_ = true
 
+[node name="LaunchLine" parent="." instance=ExtResource("5_v4bu6")]
+points = PackedVector2Array(0, 0, 0, 0)
+
 [node name="Player" parent="." instance=ExtResource("2_n3dnt")]
-position = Vector2(733, 269)
+position = Vector2(0, 0)
 metadata/_edit_lock_ = true
 
 [node name="Input" parent="." instance=ExtResource("3_hnw56")]
 visible = false
 metadata/_edit_lock_ = true
 
-[node name="LaunchLine" type="Line2D" parent="."]
-visible = false
-points = PackedVector2Array(210, 228, 287, 142)
-width_curve = SubResource("Curve_si3e2")
-default_color = Color(1, 0, 1, 1)
-metadata/_edit_lock_ = true
+[node name="LaunchTimer" type="Timer" parent="."]
+one_shot = true
+
+[connection signal="timeout" from="LaunchTimer" to="." method="_OnLaunchTimerTimeout"]
