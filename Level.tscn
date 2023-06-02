@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://ep75c5u06inp"]
+[gd_scene load_steps=8 format=3 uid="uid://ep75c5u06inp"]
 
 [ext_resource type="Texture2D" uid="uid://ckpkuy085ocr0" path="res://background.png" id="1_6d7qd"]
 
@@ -14,6 +14,8 @@ normal = Vector2(1, 0)
 normal = Vector2(-1, 0)
 
 [sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_g6583"]
+
+[sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_s4jyt"]
 
 [node name="Level" type="Node2D"]
 
@@ -58,9 +60,14 @@ metadata/_edit_lock_ = true
 position = Vector2(0, 4800)
 shape = SubResource("WorldBoundaryShape2D_g6583")
 
+[node name="TopBoundary" type="StaticBody2D" parent="."]
+
+[node name="Collision" type="CollisionShape2D" parent="TopBoundary"]
+rotation = 3.14159
+shape = SubResource("WorldBoundaryShape2D_s4jyt")
+
 [node name="Slope2" type="StaticBody2D" parent="."]
-position = Vector2(-32, 200)
-scale = Vector2(5, 5)
+position = Vector2(-48, 544)
 metadata/_edit_group_ = true
 
 [node name="Collision" type="CollisionPolygon2D" parent="Slope2"]
