@@ -4,9 +4,9 @@ using Godot;
 public partial class Main : Node
 {
     private RigidBody2D player;
-    private Line2D launchLine;
-    // private Vector2 lineStart;
-    // private Vector2 lineEnd;
+    private Line2D launchLine; // lineStart - lineEnd
+    private Vector2 lineStart; // player.Position
+    private Vector2 lineEnd; // player.Position - inputVector
     private Vector2 inputStart;
     private Vector2 inputEnd;
     private Vector2 inputVector; // inputStart - inputEnd
@@ -39,10 +39,10 @@ public partial class Main : Node
                 // inputVector = inputStart - inputEnd;
                 // GD.Print("[prep] Input vector = ", inputVector.ToString());
 
-                // lineStart = player.Position;
-                // lineEnd = player.Position;
-                launchLine.SetPointPosition(0, player.Position);
-                launchLine.SetPointPosition(1, player.Position);
+                lineStart = player.Position;
+                lineEnd = player.Position;
+                launchLine.SetPointPosition(0, lineStart);
+                launchLine.SetPointPosition(1, lineEnd);
                 launchLine.Visible = true;
             }
         }
@@ -113,10 +113,10 @@ public partial class Main : Node
     {
         if (launchLine.Visible)
         {
-            // lineStart = player.Position;
-            // lineEnd = lineStart - inputVector;
-            launchLine.SetPointPosition(0, player.Position);
-            launchLine.SetPointPosition(1, player.Position - inputVector);
+            lineStart = player.Position;
+            lineEnd = lineStart - inputVector;
+            launchLine.SetPointPosition(0, lineStart);
+            launchLine.SetPointPosition(1, lineEnd);
         }
     }
 

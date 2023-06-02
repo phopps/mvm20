@@ -24,7 +24,7 @@ shape = SubResource("CircleShape2D_11kp4")
 metadata/_edit_lock_ = true
 
 [node name="Camera2D" type="Camera2D" parent="."]
-zoom = Vector2(0.8, 0.8)
+zoom = Vector2(0.6, 0.6)
 limit_left = 0
 limit_top = 0
 limit_right = 7200
