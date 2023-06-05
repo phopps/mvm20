@@ -23,7 +23,7 @@ metadata/_edit_lock_ = true
 shape = SubResource("CircleShape2D_11kp4")
 metadata/_edit_lock_ = true
 
-[node name="Camera2D" type="Camera2D" parent="."]
+[node name="Camera" type="Camera2D" parent="."]
 zoom = Vector2(0.6, 0.6)
 limit_left = 0
 limit_top = 0

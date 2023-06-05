@@ -4,7 +4,7 @@
 _data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
 point_count = 2
 
-[node name="LaunchLine" type="Line2D"]
+[node name="Impulse" type="Line2D"]
 visible = false
 points = PackedVector2Array(210, 228, 287, 142)
 width_curve = SubResource("Curve_si3e2")

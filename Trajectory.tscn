@@ -1,0 +1,11 @@
+[gd_scene load_steps=2 format=3 uid="uid://bgnku27plvk8t"]
+
+[ext_resource type="Script" path="res://Trajectory.cs" id="1_ejbcl"]
+
+[node name="Trajectory" type="Node2D"]
+modulate = Color(0.137255, 0, 1, 0.760784)
+position = Vector2(1768, 2251)
+scale = Vector2(10, 10)
+script = ExtResource("1_ejbcl")
+points = PackedVector2Array(0, 0, 0, 0, 0, 0)
+pointsMax = 6

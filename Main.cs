@@ -1,132 +1,108 @@
-using System.Diagnostics;
 using Godot;
 
 public partial class Main : Node
 {
-    private RigidBody2D player;
-    private Line2D launchLine; // lineStart - lineEnd
-    private Vector2 lineStart; // player.Position
-    private Vector2 lineEnd; // player.Position - inputVector
-    private Vector2 inputStart;
-    private Vector2 inputEnd;
-    private Vector2 inputVector; // inputStart - inputEnd
-    private Vector2 impulse; // inputVector * multiplier
-    private Timer launchTimer; // 1 second
-    private string state = "none"; // none, idle, prep, launch
+    public string state = "NONE"; // NONE, IDLE, PREP, SHOT
     [Export] public float multiplier; // 9.0f
+    private RigidBody2D player;
+    private Vector2 inputStart; // Set at start of PREP
+    private Vector2 inputEnd; // Set at end of PREP
+    private Vector2 inputVector; // inputStart - inputEnd
+    private Line2D impulse; // impulseStart - impulseEnd
+    private Vector2 impulseStart; // player.Position
+    private Vector2 impulseEnd; // player.Position - inputVector
+    private Vector2 impulseVector; // inputVector * multiplier
+    private Trajectory trajectory; // polyline
+    private Timer timer; // 1 second
 
     public override void _Ready()
     {
         player = GetNode<RigidBody2D>("Player");
-        launchLine = GetNode<Line2D>("LaunchLine");
-        launchTimer = GetNode<Timer>("LaunchTimer");
-        state = "idle";
-        GD.Print("[none -> idle] Ready.");
+        impulse = GetNode<Line2D>("Impulse");
+        timer = GetNode<Timer>("Timer");
+        trajectory = GetNode<Trajectory>("Trajectory");
+        state = "IDLE";
+        GD.Print("[IDLE <- NONE] Main ready.");
     }
 
     public override void _UnhandledInput(InputEvent @event)
     {
-        if (state == "idle")
+        if (state == "IDLE")
         {
-            if (@event.IsActionPressed("Launch"))
+            if (@event.IsActionPressed("Shot"))
             {
-                // All devices (mouse left click, controller bottom button, touchscreen tap)
-                GD.Print("[idle -> prep] Launch button pressed.");
-                state = "prep";
-
+                // Checks all devices, including mouse left click, controller bottom button, and touchscreen tap
+                GD.Print("[PREP <- IDLE] Shot button pressed.");
+                state = "PREP";
                 inputStart = GetViewport().GetMousePosition();
                 inputEnd = inputStart;
-                // inputVector = inputStart - inputEnd;
-                // GD.Print("[prep] Input vector = ", inputVector.ToString());
-
-                lineStart = player.Position;
-                lineEnd = player.Position;
-                launchLine.SetPointPosition(0, lineStart);
-                launchLine.SetPointPosition(1, lineEnd);
-                launchLine.Visible = true;
+                impulseStart = player.Position;
+                impulseEnd = player.Position;
+                impulse.SetPointPosition(0, impulseStart);
+                impulse.SetPointPosition(1, impulseEnd);
+                impulse.Visible = true;
+                trajectory.Visible = true;
             }
         }
-        else if (state == "prep")
+        else if (state == "PREP")
         {
-            if (@event.IsActionReleased("Launch"))
+            if (@event.IsActionReleased("Shot"))
             {
-                GD.Print("[prep -> launch] Launch button released. Launch timer started.");
-                state = "launch";
-                launchTimer.Start();
-
+                GD.Print("[SHOT <- PREP] Shot button released. Shot timer started.");
+                state = "SHOT";
+                timer.Start();
                 inputEnd = GetViewport().GetMousePosition();
                 inputVector = inputStart - inputEnd;
-                GD.Print("[launch] Input vector = ", inputVector.ToString());
-
-                if (multiplier == 0)
-                {
-                    GD.Print("[launch] ERROR! Multiplier can not be set to zero.");
-                }
-
-                impulse = inputVector * multiplier;
-                GD.Print("[launch] Impulse vector = ", impulse.ToString());
-
-                launchLine.Visible = false;
-
-                player.ApplyCentralImpulse(impulse);
+                GD.Print("[SHOT] Input vector = ", inputVector.ToString());
+                if (multiplier == 0) { GD.Print("[SHOT] ERROR! Multiplier can not be set to zero."); }
+                impulseVector = inputVector * multiplier;
+                GD.Print("[SHOT] Impulse vector = ", impulseVector.ToString());
+                impulse.Visible = false;
+                trajectory.Visible = false;
+                player.ApplyCentralImpulse(impulseVector);
             }
             else if (@event is InputEventMouseMotion)
             {
                 inputEnd = GetViewport().GetMousePosition();
                 inputVector = inputStart - inputEnd;
-                GD.Print("[launch] Input vector = ", inputVector.ToString());
-
-                if (multiplier == 0)
-                {
-                    GD.Print("[launch] ERROR! Multiplier can not be set to zero.");
-                }
-
-                impulse = inputVector * multiplier;
-                GD.Print("[launch] Impulse vector = ", impulse.ToString());
-
-                // lineStart = player.Position;
-                // lineEnd = lineStart - inputVector;
-                // launchLine.SetPointPosition(0, lineStart);
-                // launchLine.SetPointPosition(1, lineEnd);
-                // GD.Print("[prep] Mouse moved.");
+                GD.Print("[PREP] Input vector = ", inputVector.ToString());
+                if (multiplier == 0) { GD.Print("[SHOT] ERROR! Multiplier can not be set to zero."); }
+                impulseVector = inputVector * multiplier;
+                GD.Print("[PREP] Impulse vector = ", impulseVector.ToString());
             }
             else if (@event is InputEventJoypadMotion)
             {
-                // GD.Print("[prep] Joystick moved.");
+                // GD.Print("[PREP] Joystick moved.");
             }
             else if (@event is InputEventScreenDrag)
             {
-                // GD.Print("[prep] Touchscreen dragged.");
+                // GD.Print("[PREP] Touchscreen dragged.");
             }
         }
-        else if (state == "launch")
+        else if (state == "SHOT")
         {
-            // GD.Print("[launch] ", @event.GetClass(), " detected.");
+            // GD.Print("[SHOT] ", @event.GetClass(), " detected.");
         }
         else
         {
-            GD.Print("[none] Error: no player state detected.");
+            GD.Print("[NONE] Error: no player state detected.");
         }
     }
 
     public override void _Process(double delta)
     {
-        if (launchLine.Visible)
+        if (impulse.Visible)
         {
-            lineStart = player.Position;
-            lineEnd = lineStart - inputVector;
-            launchLine.SetPointPosition(0, lineStart);
-            launchLine.SetPointPosition(1, lineEnd);
+            impulseStart = player.Position;
+            impulseEnd = impulseStart - inputVector;
+            impulse.SetPointPosition(0, impulseStart);
+            impulse.SetPointPosition(1, impulseEnd);
         }
     }
 
-    private void _OnLaunchTimerTimeout()
+    private void OnTimerTimeout()
     {
-        GD.Print("[launch -> idle] Launch timer stopped.");
-        state = "idle";
+        GD.Print("[IDLE <- SHOT] Shot timer stopped.");
+        state = "IDLE";
     }
 }
-
-// Increase lineStart from center of player to radius of player
-// Emit signal whenever state is changed
-// Animate line to move endpoint toward start point over time duration
