@@ -68,6 +68,10 @@ Shot={
 2d_physics/layer_2="Player"
 2d_physics/layer_3="Pickup"
 
+[physics]
+
+common/physics_ticks_per_second=240
+
 [rendering]
 
 environment/defaults/default_clear_color=Color(0.301961, 0.301961, 0.301961, 0)
