@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://dsf33784hmwj"]
+[gd_scene load_steps=9 format=3 uid="uid://dsf33784hmwj"]
 
 [ext_resource type="PackedScene" uid="uid://ep75c5u06inp" path="res://Level.tscn" id="1_le0le"]
 [ext_resource type="Script" path="res://Main.cs" id="1_mp1kx"]
@@ -7,14 +7,17 @@
 [ext_resource type="PackedScene" uid="uid://bgnku27plvk8t" path="res://Trajectory.tscn" id="3_djo5l"]
 [ext_resource type="PackedScene" uid="uid://c666o3u8ccvi" path="res://Impulse.tscn" id="5_v4bu6"]
 [ext_resource type="PackedScene" uid="uid://cob14g2prjtqk" path="res://Home.tscn" id="7_w30af"]
+[ext_resource type="PackedScene" uid="uid://ul0ihthnl2dr" path="res://Pause.tscn" id="8_2nawe"]
 
 [node name="Main" type="Node"]
 script = ExtResource("1_mp1kx")
 multiplier = 9.0
 
 [node name="Background" parent="." instance=ExtResource("2_drmls")]
+visible = false
 
 [node name="Level" parent="." instance=ExtResource("1_le0le")]
+visible = false
 metadata/_edit_lock_ = true
 
 [node name="Trajectory" parent="." instance=ExtResource("3_djo5l")]
@@ -25,6 +28,7 @@ metadata/_edit_lock_ = true
 points = PackedVector2Array(0, 0, 0, 0)
 
 [node name="Player" parent="." instance=ExtResource("2_n3dnt")]
+visible = false
 position = Vector2(0, 0)
 metadata/_edit_lock_ = true
 
@@ -32,6 +36,9 @@ metadata/_edit_lock_ = true
 one_shot = true
 
 [node name="Home" parent="." instance=ExtResource("7_w30af")]
+
+[node name="Pause" parent="." instance=ExtResource("8_2nawe")]
+visible = false
 
 [connection signal="timeout" from="Timer" to="." method="OnTimerTimeout"]
 [connection signal="OnPlayGame" from="Home" to="." method="OnHomeOnPlayGame"]

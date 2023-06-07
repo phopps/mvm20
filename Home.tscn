@@ -13,7 +13,7 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.152941, 0.152941, 0.152941, 1)
 
-[node name="Name" type="RichTextLabel" parent="."]
+[node name="Label" type="RichTextLabel" parent="."]
 anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5

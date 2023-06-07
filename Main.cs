@@ -15,6 +15,9 @@ public partial class Main : Node
     private Trajectory trajectory; // polyline
     private Timer timer; // 1 second
     private CanvasLayer home; // Main menu
+    private Sprite2D background;
+    private Node2D level;
+
 
     public override void _Ready()
     {
@@ -23,6 +26,8 @@ public partial class Main : Node
         impulse = GetNode<Line2D>("Impulse");
         timer = GetNode<Timer>("Timer");
         trajectory = GetNode<Trajectory>("Trajectory");
+        level = GetNode<Node2D>("Level");
+        background = GetNode<Sprite2D>("Background");
         state = "IDLE";
         GD.Print("[IDLE <- NONE] Main ready.");
     }
@@ -112,6 +117,9 @@ public partial class Main : Node
     {
         GD.Print("Playing game. Signal received from Home.");
         home.Hide();
+        player.Show();
+        background.Show();
+        level.Show();
     }
 
     private void OnHomeOnQuitGame()
