@@ -2,14 +2,11 @@ using Godot;
 
 public partial class Pause : CanvasLayer
 {
-  // Called when the node enters the scene tree for the first time.
-  public override void _Ready()
-  {
-    GD.Print("Pause ready.");
-  }
+    private string state;
 
-  // Called every frame. 'delta' is the elapsed time since the previous frame.
-  public override void _Process(double delta)
-  {
-  }
+    public override void _Ready()
+    {
+        state = GetNode<Main>("/root/Main").state;
+        GD.Print("[", state, "] Pause ready.");
+    }
 }

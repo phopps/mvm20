@@ -2,7 +2,8 @@ using Godot;
 
 public partial class Main : Node
 {
-    public string state = "NONE"; // NONE, IDLE, PREP, SHOT
+    public string statePrevious = "NONE";
+    public string state = "LOAD"; // NONE, LOAD, IDLE, PREP, SHOT
     [Export] public float multiplier; // 9.0f
     private RigidBody2D player;
     private Vector2 inputStart; // Set at start of PREP
@@ -18,7 +19,6 @@ public partial class Main : Node
     private Sprite2D background;
     private Node2D level;
 
-
     public override void _Ready()
     {
         home = GetNode<CanvasLayer>("Home");
@@ -28,8 +28,9 @@ public partial class Main : Node
         trajectory = GetNode<Trajectory>("Trajectory");
         level = GetNode<Node2D>("Level");
         background = GetNode<Sprite2D>("Background");
+        statePrevious = state;
         state = "IDLE";
-        GD.Print("[IDLE <- NONE] Main ready.");
+        GD.Print("[", state, " <- ", statePrevious, "] Main ready.");
     }
 
     public override void _UnhandledInput(InputEvent @event)
@@ -39,8 +40,9 @@ public partial class Main : Node
             if (@event.IsActionPressed("Shot"))
             {
                 // Checks all devices, including mouse left click, controller bottom button, and touchscreen tap
-                GD.Print("[PREP <- IDLE] Shot button pressed.");
+                statePrevious = state;
                 state = "PREP";
+                GD.Print("[", state, " <- ", statePrevious, "] Shot button pressed.");
                 inputStart = GetViewport().GetMousePosition();
                 inputEnd = inputStart;
                 impulseStart = player.Position;
@@ -55,15 +57,16 @@ public partial class Main : Node
         {
             if (@event.IsActionReleased("Shot"))
             {
-                GD.Print("[SHOT <- PREP] Shot button released. Shot timer started.");
+                statePrevious = state;
                 state = "SHOT";
+                GD.Print("[", state, " <- ", statePrevious, "] Shot button released. Shot timer started.");
                 timer.Start();
                 inputEnd = GetViewport().GetMousePosition();
                 inputVector = inputStart - inputEnd;
-                GD.Print("[SHOT] Input vector = ", inputVector.ToString());
+                GD.Print("[", state, "] Input vector = ", inputVector.ToString());
                 if (multiplier == 0) { GD.Print("[SHOT] ERROR! Multiplier can not be set to zero."); }
                 impulseVector = inputVector * multiplier;
-                GD.Print("[SHOT] Impulse vector = ", impulseVector.ToString());
+                GD.Print("[", state, "] Impulse vector = ", impulseVector.ToString());
                 impulse.Visible = false;
                 trajectory.Visible = false;
                 player.ApplyCentralImpulse(impulseVector);
@@ -72,10 +75,10 @@ public partial class Main : Node
             {
                 inputEnd = GetViewport().GetMousePosition();
                 inputVector = inputStart - inputEnd;
-                GD.Print("[PREP] Input vector = ", inputVector.ToString());
-                if (multiplier == 0) { GD.Print("[SHOT] ERROR! Multiplier can not be set to zero."); }
+                GD.Print("[", state, "] Input vector = ", inputVector.ToString());
+                if (multiplier == 0) { GD.Print("[", state, "] ERROR! Multiplier can not be set to zero."); }
                 impulseVector = inputVector * multiplier;
-                GD.Print("[PREP] Impulse vector = ", impulseVector.ToString());
+                GD.Print("[", state, "] Impulse vector = ", impulseVector.ToString());
             }
             else if (@event is InputEventJoypadMotion)
             {
@@ -92,7 +95,7 @@ public partial class Main : Node
         }
         else
         {
-            GD.Print("[NONE] Error: no player state detected.");
+            GD.Print("[", state, "] Error: no player state detected.");
         }
     }
 
@@ -109,13 +112,14 @@ public partial class Main : Node
 
     private void OnTimerTimeout()
     {
-        GD.Print("[IDLE <- SHOT] Shot timer stopped.");
+        statePrevious = state;
         state = "IDLE";
+        GD.Print("[", state, " <- ", statePrevious, "] Shot timer stopped.");
     }
 
     private void OnHomeOnPlayGame()
     {
-        GD.Print("Playing game. Signal received from Home.");
+        GD.Print("[", state, "] Playing game. Signal received from Home.");
         home.Hide();
         player.Show();
         background.Show();
@@ -124,7 +128,7 @@ public partial class Main : Node
 
     private void OnHomeOnQuitGame()
     {
-        GD.Print("Quitting game. Signal received from Home.");
+        GD.Print("[", state, "] Quitting game. Signal received from Home.");
         GetTree().Quit();
     }
 }
