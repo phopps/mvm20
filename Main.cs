@@ -14,9 +14,11 @@ public partial class Main : Node
     private Vector2 impulseVector; // inputVector * multiplier
     private Trajectory trajectory; // polyline
     private Timer timer; // 1 second
+    private CanvasLayer home; // Main menu
 
     public override void _Ready()
     {
+        home = GetNode<CanvasLayer>("Home");
         player = GetNode<RigidBody2D>("Player");
         impulse = GetNode<Line2D>("Impulse");
         timer = GetNode<Timer>("Timer");
@@ -104,5 +106,17 @@ public partial class Main : Node
     {
         GD.Print("[IDLE <- SHOT] Shot timer stopped.");
         state = "IDLE";
+    }
+
+    private void OnHomeOnPlayGame()
+    {
+        GD.Print("Playing game. Signal received from Home.");
+        home.Hide();
+    }
+
+    private void OnHomeOnQuitGame()
+    {
+        GD.Print("Quitting game. Signal received from Home.");
+        GetTree().Quit();
     }
 }
