@@ -66,3 +66,6 @@ offset_bottom = -132.0
 grow_horizontal = 2
 grow_vertical = 0
 text = "Quit"
+
+[connection signal="pressed" from="Resume" to="." method="OnResumePressed"]
+[connection signal="pressed" from="Quit" to="." method="OnQuitPressed"]

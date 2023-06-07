@@ -45,3 +45,5 @@ visible = false
 [connection signal="timeout" from="Timer" to="." method="OnTimerTimeout"]
 [connection signal="OnPlayGame" from="Home" to="." method="OnHomeOnPlayGame"]
 [connection signal="OnQuitGame" from="Home" to="." method="OnHomeOnQuitGame"]
+[connection signal="OnQuitGame" from="Pause" to="." method="OnPauseOnQuitGame"]
+[connection signal="OnResumeGame" from="Pause" to="." method="OnPauseOnResumeGame"]

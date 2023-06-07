@@ -26,6 +26,7 @@ public partial class Main : Node
 
     public override void _Ready()
     {
+        GetTree().Paused = true;
         home = GetNode<CanvasLayer>("Home");
         pause = GetNode<CanvasLayer>("Pause");
         player = GetNode<RigidBody2D>("Player");
@@ -45,13 +46,13 @@ public partial class Main : Node
         {
             if (state == STATE.PAUSED)
             {
-                statePrevious = state;
-                state = stateNext;
-                stateNext = STATE.NONE;
-                GD.Print("[", state, " <- ", statePrevious, "] Pause button pressed. Resuming game.");
-                // EmitSignal("OnResumeGame");
-                pause.Hide();
-                GetTree().Paused = false;
+                OnPauseOnResumeGame();
+                // statePrevious = state;
+                // state = stateNext;
+                // stateNext = STATE.NONE;
+                // GD.Print("[", state, " <- ", statePrevious, "] Pause button pressed. Resuming game.");
+                // pause.Hide();
+                // GetTree().Paused = false;
             }
             else if (state == STATE.IDLE || state == STATE.PREP || state == STATE.SHOT)
             {
@@ -59,7 +60,6 @@ public partial class Main : Node
                 state = STATE.PAUSED;
                 stateNext = statePrevious;
                 GD.Print("[", state, " <- ", statePrevious, "] Pause button pressed. Pausing game.");
-                // EmitSignal("OnPauseGame");
                 GetTree().Paused = true;
                 pause.Show();
             }
@@ -158,17 +158,34 @@ public partial class Main : Node
     {
         statePrevious = state;
         state = STATE.IDLE;
-        GD.Print("[", state, "] Playing game. Signal received from Home.");
+        GD.Print("[", state, " <- ", statePrevious, "] Playing game. Signal received from Home.");
         home.Hide();
         player.Show();
         background.Show();
         level.Show();
+        GetTree().Paused = false;
     }
 
     private void OnHomeOnQuitGame()
     {
         GD.Print("[", state, "] Quitting game. Signal received from Home.");
         GetTree().Quit();
+    }
+
+    private void OnPauseOnQuitGame()
+    {
+        GD.Print("[", state, "] Quitting game. Signal received from Pause.");
+        GetTree().Quit();
+    }
+
+    private void OnPauseOnResumeGame()
+    {
+        statePrevious = state;
+        state = stateNext;
+        stateNext = STATE.NONE;
+        GD.Print("[", state, " <- ", statePrevious, "] Resuming game. Signal received from Pause.");
+        pause.Hide();
+        GetTree().Paused = false;
     }
 
     // public void ChangeState(STATE stateNext)

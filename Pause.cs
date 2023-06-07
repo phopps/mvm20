@@ -2,6 +2,8 @@ using Godot;
 
 public partial class Pause : CanvasLayer
 {
+    [Signal] public delegate void OnResumeGameEventHandler();
+    [Signal] public delegate void OnQuitGameEventHandler();
     private Main.STATE state;
     private Main.STATE statePrevious;
     private Main.STATE stateNext;
@@ -14,16 +16,16 @@ public partial class Pause : CanvasLayer
         GD.Print("[", state, "] Pause ready.");
     }
 
-    public override void _Input(InputEvent @event)
+    public void OnResumePressed()
     {
-        if (@event.IsActionPressed("Pause") && state == Main.STATE.PAUSED)
-        {
-            statePrevious = state;
-            state = stateNext;
-            stateNext = Main.STATE.NONE;
-            GD.Print("[", state, " <- ", statePrevious, "] Pause button pressed. Unpausing game.");
-            Hide();
-            GetTree().Paused = false;
-        }
+        state = GetNode<Main>("/root/Main").state;
+        GD.Print("[", state, "] Resume button pressed. Emitting signal from Pause to Main.");
+        EmitSignal("OnResumeGame");
     }
+
+    public void OnQuitPressed()
+    {
+        EmitSignal("OnQuitGame");
+    }
+
 }
