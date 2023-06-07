@@ -9,6 +9,7 @@ public partial class Main : Node
     public STATE state = STATE.LOAD;
     public STATE stateNext = STATE.NONE;
     [Export] public float multiplier; // 9.0f
+    [Export] public Vector2 levelStart; // starting position for level
     private RigidBody2D player;
     private Vector2 inputStart; // Set at start of PREP
     private Vector2 inputEnd; // Set at end of PREP
@@ -35,6 +36,7 @@ public partial class Main : Node
         trajectory = GetNode<Trajectory>("Trajectory");
         level = GetNode<Node2D>("Level");
         background = GetNode<Sprite2D>("Background");
+        ResetPlayer();
         statePrevious = state;
         state = STATE.LOAD;
         GD.Print("[", state, "] Main ready.");
@@ -160,10 +162,12 @@ public partial class Main : Node
         state = STATE.IDLE;
         GD.Print("[", state, " <- ", statePrevious, "] Playing game. Signal received from Home.");
         home.Hide();
+        ResetPlayer();
         player.Show();
         background.Show();
         level.Show();
         GetTree().Paused = false;
+        // make sure timer is reset
     }
 
     private void OnHomeOnQuitGame()
@@ -178,6 +182,21 @@ public partial class Main : Node
         GetTree().Quit();
     }
 
+    private void OnPauseOnHome()
+    {
+        statePrevious = state;
+        state = STATE.LOAD;
+        GD.Print("[", state, " <- ", statePrevious, "] Home screen loading. Signal received from Pause.");
+        home.Show();
+        pause.Hide();
+        player.Hide();
+        ResetPlayer();
+        background.Hide();
+        level.Hide();
+        GetTree().Paused = true;
+        timer.Stop();
+    }
+
     private void OnPauseOnResumeGame()
     {
         statePrevious = state;
@@ -188,10 +207,17 @@ public partial class Main : Node
         GetTree().Paused = false;
     }
 
+    private void ResetPlayer()
+    {
+        player.GlobalPosition = levelStart;
+        player.LinearVelocity = Vector2.Zero;
+        player.AngularVelocity = 0.0f;
+        player.Rotation = 0;
+    }
+
     // public void ChangeState(STATE stateNext)
     // {
     //     statePrevious = state;
     //     state = stateNext;
     // }
-
 }

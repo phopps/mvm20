@@ -68,4 +68,5 @@ grow_vertical = 0
 text = "Quit"
 
 [connection signal="pressed" from="Resume" to="." method="OnResumePressed"]
+[connection signal="pressed" from="Home" to="." method="OnHomePressed"]
 [connection signal="pressed" from="Quit" to="." method="OnQuitPressed"]
