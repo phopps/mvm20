@@ -1,11 +1,17 @@
-[gd_scene load_steps=3 format=3 uid="uid://taryqdfmfeok"]
+[gd_scene load_steps=4 format=3 uid="uid://taryqdfmfeok"]
 
 [ext_resource type="Texture2D" uid="uid://c0w2s0o7mwq4v" path="res://Player.png" id="1_i4oap"]
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_xalnm"]
+bounce = 0.15
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_11kp4"]
 radius = 30.0
 
 [node name="Player" type="RigidBody2D"]
+position = Vector2(0, -2)
+inertia = 1.5
+physics_material_override = SubResource("PhysicsMaterial_xalnm")
 can_sleep = false
 
 [node name="Sprite" type="Sprite2D" parent="."]
@@ -17,8 +23,8 @@ metadata/_edit_lock_ = true
 shape = SubResource("CircleShape2D_11kp4")
 metadata/_edit_lock_ = true
 
-[node name="Camera2D" type="Camera2D" parent="."]
-zoom = Vector2(0.8, 0.8)
+[node name="Camera" type="Camera2D" parent="."]
+zoom = Vector2(0.6, 0.6)
 limit_left = 0
 limit_top = 0
 limit_right = 7200
