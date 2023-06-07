@@ -1,0 +1,9 @@
+[gd_scene load_steps=2 format=3 uid="uid://3hep2eokwkdl"]
+
+[ext_resource type="Texture2D" uid="uid://ckpkuy085ocr0" path="res://background.png" id="1_88v3y"]
+
+[node name="Background" type="Sprite2D"]
+show_behind_parent = true
+texture = ExtResource("1_88v3y")
+centered = false
+metadata/_edit_lock_ = true
