@@ -3,6 +3,7 @@
 [ext_resource type="Script" path="res://Trajectory.cs" id="1_ejbcl"]
 
 [node name="Trajectory" type="Node2D"]
+process_mode = 1
 modulate = Color(0.137255, 0, 1, 0.760784)
 position = Vector2(1768, 2251)
 scale = Vector2(10, 10)

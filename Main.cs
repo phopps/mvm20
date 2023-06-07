@@ -1,12 +1,13 @@
 using Godot;
 
-// public void ChangeState(STATE stateNext) { statePrevious = state; state = stateNext; }
-
 public partial class Main : Node
 {
+    // [Signal] public delegate void OnPauseGameEventHandler();
+    // [Signal] public delegate void OnResumeGameEventHandler();
     public enum STATE { NONE, LOAD, IDLE, PREP, SHOT, PAUSED }
     public STATE statePrevious = STATE.NONE;
     public STATE state = STATE.LOAD;
+    public STATE stateNext = STATE.NONE;
     [Export] public float multiplier; // 9.0f
     private RigidBody2D player;
     private Vector2 inputStart; // Set at start of PREP
@@ -21,10 +22,12 @@ public partial class Main : Node
     private CanvasLayer home; // Main menu
     private Sprite2D background;
     private Node2D level;
+    private CanvasLayer pause;
 
     public override void _Ready()
     {
         home = GetNode<CanvasLayer>("Home");
+        pause = GetNode<CanvasLayer>("Pause");
         player = GetNode<RigidBody2D>("Player");
         impulse = GetNode<Line2D>("Impulse");
         timer = GetNode<Timer>("Timer");
@@ -32,13 +35,36 @@ public partial class Main : Node
         level = GetNode<Node2D>("Level");
         background = GetNode<Sprite2D>("Background");
         statePrevious = state;
-        state = STATE.IDLE;
-        GD.Print("[", state, " <- ", statePrevious, "] Main ready.");
+        state = STATE.LOAD;
+        GD.Print("[", state, "] Main ready.");
     }
 
     public override void _UnhandledInput(InputEvent @event)
     {
-        if (state == STATE.IDLE)
+        if (@event.IsActionPressed("Pause"))
+        {
+            if (state == STATE.PAUSED)
+            {
+                statePrevious = state;
+                state = stateNext;
+                stateNext = STATE.NONE;
+                GD.Print("[", state, " <- ", statePrevious, "] Pause button pressed. Resuming game.");
+                // EmitSignal("OnResumeGame");
+                pause.Hide();
+                GetTree().Paused = false;
+            }
+            else if (state == STATE.IDLE || state == STATE.PREP || state == STATE.SHOT)
+            {
+                statePrevious = state;
+                state = STATE.PAUSED;
+                stateNext = statePrevious;
+                GD.Print("[", state, " <- ", statePrevious, "] Pause button pressed. Pausing game.");
+                // EmitSignal("OnPauseGame");
+                GetTree().Paused = true;
+                pause.Show();
+            }
+        }
+        else if (state == STATE.IDLE)
         {
             if (@event.IsActionPressed("Shot"))
             {
@@ -96,6 +122,14 @@ public partial class Main : Node
         {
             // GD.Print("[SHOT] ", @event.GetClass(), " detected.");
         }
+        else if (state == STATE.LOAD)
+        {
+
+        }
+        else if (state == STATE.PAUSED)
+        {
+
+        }
         else
         {
             GD.Print("[", state, "] Error: no player state detected.");
@@ -122,6 +156,8 @@ public partial class Main : Node
 
     private void OnHomeOnPlayGame()
     {
+        statePrevious = state;
+        state = STATE.IDLE;
         GD.Print("[", state, "] Playing game. Signal received from Home.");
         home.Hide();
         player.Show();
@@ -134,4 +170,11 @@ public partial class Main : Node
         GD.Print("[", state, "] Quitting game. Signal received from Home.");
         GetTree().Quit();
     }
+
+    // public void ChangeState(STATE stateNext)
+    // {
+    //     statePrevious = state;
+    //     state = stateNext;
+    // }
+
 }
