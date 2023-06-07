@@ -1,9 +1,12 @@
 using Godot;
 
+// public void ChangeState(STATE stateNext) { statePrevious = state; state = stateNext; }
+
 public partial class Main : Node
 {
-    public string statePrevious = "NONE";
-    public string state = "LOAD"; // NONE, LOAD, IDLE, PREP, SHOT
+    public enum STATE { NONE, LOAD, IDLE, PREP, SHOT, PAUSED }
+    public STATE statePrevious = STATE.NONE;
+    public STATE state = STATE.LOAD;
     [Export] public float multiplier; // 9.0f
     private RigidBody2D player;
     private Vector2 inputStart; // Set at start of PREP
@@ -29,19 +32,19 @@ public partial class Main : Node
         level = GetNode<Node2D>("Level");
         background = GetNode<Sprite2D>("Background");
         statePrevious = state;
-        state = "IDLE";
+        state = STATE.IDLE;
         GD.Print("[", state, " <- ", statePrevious, "] Main ready.");
     }
 
     public override void _UnhandledInput(InputEvent @event)
     {
-        if (state == "IDLE")
+        if (state == STATE.IDLE)
         {
             if (@event.IsActionPressed("Shot"))
             {
                 // Checks all devices, including mouse left click, controller bottom button, and touchscreen tap
                 statePrevious = state;
-                state = "PREP";
+                state = STATE.PREP;
                 GD.Print("[", state, " <- ", statePrevious, "] Shot button pressed.");
                 inputStart = GetViewport().GetMousePosition();
                 inputEnd = inputStart;
@@ -53,12 +56,12 @@ public partial class Main : Node
                 trajectory.Visible = true;
             }
         }
-        else if (state == "PREP")
+        else if (state == STATE.PREP)
         {
             if (@event.IsActionReleased("Shot"))
             {
                 statePrevious = state;
-                state = "SHOT";
+                state = STATE.SHOT;
                 GD.Print("[", state, " <- ", statePrevious, "] Shot button released. Shot timer started.");
                 timer.Start();
                 inputEnd = GetViewport().GetMousePosition();
@@ -89,7 +92,7 @@ public partial class Main : Node
                 // GD.Print("[PREP] Touchscreen dragged.");
             }
         }
-        else if (state == "SHOT")
+        else if (state == STATE.SHOT)
         {
             // GD.Print("[SHOT] ", @event.GetClass(), " detected.");
         }
@@ -113,7 +116,7 @@ public partial class Main : Node
     private void OnTimerTimeout()
     {
         statePrevious = state;
-        state = "IDLE";
+        state = STATE.IDLE;
         GD.Print("[", state, " <- ", statePrevious, "] Shot timer stopped.");
     }
 

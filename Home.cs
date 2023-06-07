@@ -4,7 +4,13 @@ public partial class Home : CanvasLayer
 {
     [Signal] public delegate void OnPlayGameEventHandler();
     [Signal] public delegate void OnQuitGameEventHandler();
-    private string state;
+    private Main.STATE state;
+
+    public override void _Ready()
+    {
+        state = GetNode<Main>("/root/Main").state;
+        GD.Print("[", state, "] Home ready.");
+    }
 
     public void OnPlayPressed()
     {

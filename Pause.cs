@@ -2,7 +2,7 @@ using Godot;
 
 public partial class Pause : CanvasLayer
 {
-    private string state;
+    private Main.STATE state;
 
     public override void _Ready()
     {

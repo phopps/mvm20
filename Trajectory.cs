@@ -5,7 +5,7 @@ public partial class Trajectory : Node2D
     [Export] public Vector2[] points;
     [Export] public int pointsMax;
     private RigidBody2D player;
-    private string state;
+    private Main.STATE state;
 
     public override void _Ready()
     {
