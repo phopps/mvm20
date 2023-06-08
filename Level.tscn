@@ -16,6 +16,7 @@ normal = Vector2(-1, 0)
 [sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_s4jyt"]
 
 [node name="Level" type="Node2D"]
+process_mode = 1
 
 [node name="Slope" type="StaticBody2D" parent="."]
 position = Vector2(160, 2256)

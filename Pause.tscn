@@ -1,0 +1,72 @@
+[gd_scene load_steps=2 format=3 uid="uid://ul0ihthnl2dr"]
+
+[ext_resource type="Script" path="res://Pause.cs" id="1_8ch5d"]
+
+[node name="Pause" type="CanvasLayer"]
+script = ExtResource("1_8ch5d")
+
+[node name="Background" type="ColorRect" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.101961, 0.101961, 0.101961, 1)
+
+[node name="Label" type="RichTextLabel" parent="."]
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -52.0
+offset_top = 129.0
+offset_right = 52.0
+offset_bottom = 214.0
+grow_horizontal = 2
+text = "Paused"
+fit_content = true
+
+[node name="Resume" type="Button" parent="."]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -4.0
+offset_top = -4.0
+offset_right = 4.0
+offset_bottom = 4.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "Resume"
+
+[node name="Home" type="Button" parent="."]
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -52.0
+offset_top = -312.0
+offset_right = 45.0
+offset_bottom = -265.0
+grow_horizontal = 2
+grow_vertical = 0
+text = "Home"
+
+[node name="Quit" type="Button" parent="."]
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -35.0
+offset_top = -163.0
+offset_right = 44.0
+offset_bottom = -132.0
+grow_horizontal = 2
+grow_vertical = 0
+text = "Quit"
+
+[connection signal="pressed" from="Resume" to="." method="OnResumePressed"]
+[connection signal="pressed" from="Home" to="." method="OnHomePressed"]
+[connection signal="pressed" from="Quit" to="." method="OnQuitPressed"]

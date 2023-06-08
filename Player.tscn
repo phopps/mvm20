@@ -9,6 +9,7 @@ bounce = 0.15
 radius = 30.0
 
 [node name="Player" type="RigidBody2D"]
+process_mode = 1
 position = Vector2(0, -2)
 inertia = 1.5
 physics_material_override = SubResource("PhysicsMaterial_xalnm")
