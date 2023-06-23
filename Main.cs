@@ -1,4 +1,5 @@
 using Godot;
+using static Game;
 
 public partial class Main : Node
 {
@@ -18,9 +19,6 @@ public partial class Main : Node
     private Sprite2D background;
     private Node2D level;
     private CanvasLayer pause;
-
-    // Global autoload singleton containing important logic and data such as game, player, and level states
-    private Game game;
 
     public override void _Ready()
     {
